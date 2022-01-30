@@ -85,14 +85,17 @@ func (v *VirtualContext) hasWorkspaces() bool {
 }
 
 func (v *VirtualContext) getWorkspaces() ([]*WorkspaceContext, error) {
-	if v.Workspaces == nil {
-		return nil, errors.New("invalid workspace depth")
+	if v.Workspaces == nil || len(v.Workspaces) == 0 {
+		return nil, errors.New("please initialize a valid workspace")
 	}
 	return v.Workspaces, nil
 }
 
 func (v *VirtualContext) getWorkspace(workspaceDepth int) (*WorkspaceContext, error) {
-	if v.Workspaces == nil || workspaceDepth < 0 || len(v.Workspaces) <= workspaceDepth {
+	if v.Workspaces == nil || len(v.Workspaces) == 0 {
+		return nil, errors.New("please initialize a valid workspace")
+	}
+	if workspaceDepth < 0 || len(v.Workspaces) <= workspaceDepth {
 		return nil, errors.New("invalid workspace depth")
 	}
 	return v.Workspaces[workspaceDepth], nil
