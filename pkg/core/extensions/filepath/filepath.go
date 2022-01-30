@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	extStrings "github.com/nitroci/nitroci-core/pkg/core/extensions/strings"
+	pkgStrings "github.com/nitroci/nitroci-core/pkg/core/extensions/strings"
 )
 
 type PathDescription struct {
@@ -62,7 +62,7 @@ func GetFilePathDescription(filePath string, extensions []string, checkExist boo
 	}
 	pathDesc := &PathDescription{}
 	ext := strings.Replace(strings.ToUpper(filepath.Ext(filePath)), ".", "", 1)
-	if !extStrings.StringInSlice(ext, extensions) {
+	if !pkgStrings.StringInSlice(ext, extensions) {
 		return nil, errors.New("extension is not valid")
 	}
 	if len(ext) == 0 {

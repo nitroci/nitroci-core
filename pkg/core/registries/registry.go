@@ -23,11 +23,11 @@ import (
 	"path"
 	"strings"
 
-	extHttp "github.com/nitroci/nitroci-core/pkg/core/extensions/http"
-	extOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
-	extTar "github.com/nitroci/nitroci-core/pkg/core/extensions/tar"
-	extTemplate "github.com/nitroci/nitroci-core/pkg/core/extensions/template"
-	extYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
+	pkgHttp "github.com/nitroci/nitroci-core/pkg/core/extensions/http"
+	pkgOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
+	pkgTar "github.com/nitroci/nitroci-core/pkg/core/extensions/tar"
+	pkgTemplate "github.com/nitroci/nitroci-core/pkg/core/extensions/template"
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
 )
 
 const (
@@ -140,12 +140,12 @@ func (r *RegistryModel) findPackage(dep *dependency) (*PackageDef, error) {
 
 func (r *Registry) downloadGitHubRegistryModel() (*RegistryModel, error) {
 	pluginsUrl := fmt.Sprintf("%v/nitro-plugins.yml", r.Uri)
-	httpResult, err := extHttp.HttpGet(pluginsUrl)
+	httpResult, err := pkgHttp.HttpGet(pluginsUrl)
 	if err != nil {
 		return nil, err
 	}
 	registryModel := &RegistryModel{}
-	_, err = extYaml.LoadYamlBytes(httpResult.Body, &registryModel)
+	_, err = pkgYaml.LoadYamlBytes(httpResult.Body, &registryModel)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +159,7 @@ func (r *Registry) downloadUrlDependency(dep *dependency, packageDef *PackageDef
 	if _, err := os.Stat(workspaceFolderName); err == nil {
 		return nil
 	} else if _, err := os.Stat(globalFolderName); err == nil {
-		err := extOs.CopyDir(globalFolderName, workspaceFolderName)
+		err := pkgOs.CopyDir(globalFolderName, workspaceFolderName)
 		if err != nil {
 			return err
 		}
@@ -179,11 +179,11 @@ func (r *Registry) downloadUrlDependency(dep *dependency, packageDef *PackageDef
 		Goos:    goos,
 		Goarch:  goarc,
 	}
-	releaseUrl, err := extTemplate.ExecuteString(packageDef.Release, templateData)
+	releaseUrl, err := pkgTemplate.ExecuteString(packageDef.Release, templateData)
 	if err != nil {
 		return err
 	}
-	httpResult, err := extHttp.HttpGet(releaseUrl)
+	httpResult, err := pkgHttp.HttpGet(releaseUrl)
 	if err != nil {
 		return err
 	}
@@ -197,12 +197,12 @@ func (r *Registry) downloadUrlDependency(dep *dependency, packageDef *PackageDef
 		return err
 	}
 	reader := bytes.NewReader(httpResult.Body)
-	extOs.MkdirInArray([]string{globalFolderName})
-	err = extTar.Untar(globalFolderName, reader)
+	pkgOs.MkdirInArray([]string{globalFolderName})
+	err = pkgTar.Untar(globalFolderName, reader)
 	if err != nil {
 		return err
 	}
-	err = extOs.CopyDir(globalFolderName, workspaceFolderName)
+	err = pkgOs.CopyDir(globalFolderName, workspaceFolderName)
 	if err != nil {
 		return err
 	}

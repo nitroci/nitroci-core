@@ -20,10 +20,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nitroci/nitroci-core/pkg/core/workspaces"
-
-	extFilesearch "github.com/nitroci/nitroci-core/pkg/core/extensions/filesearch"
-	extYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
+	pkgFilesearch "github.com/nitroci/nitroci-core/pkg/core/extensions/filesearch"
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
+	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
 type WorkspaceContext struct {
@@ -43,12 +42,12 @@ type VirtualContext struct {
 func findWorkspaceFiles(runtimeContext *RuntimeContext) (workspaceFiles []string) {
 	wksFolder := runtimeContext.Cli.Settings[CFG_NAME_WKS_FILE_FOLDER]
 	wksFileName := runtimeContext.Cli.Settings[CFG_NAME_WKS_FILE_NAME]
-	return extFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
+	return pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
 }
 
-func (v *WorkspaceContext) CreateWorkspaceInstance() (*workspaces.WorkspaceModel, error) {
-	var wks = &workspaces.WorkspaceModel{}
-	_, err := extYaml.LoadYamlFile(v.WorkspacePath, &wks)
+func (v *WorkspaceContext) CreateWorkspaceInstance() (*pkgWorkspaces.WorkspaceModel, error) {
+	var wks = &pkgWorkspaces.WorkspaceModel{}
+	_, err := pkgYaml.LoadYamlFile(v.WorkspacePath, &wks)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +62,8 @@ func (v *VirtualContext) loadVirtualContext(runtimeContext *RuntimeContext, work
 		return v, nil
 	}
 	for i, prjFile := range prjFiles {
-		var wksModel = &workspaces.WorkspaceModel{}
-		extYaml.LoadYamlFile(prjFile, &wksModel)
+		var wksModel = &pkgWorkspaces.WorkspaceModel{}
+		pkgYaml.LoadYamlFile(prjFile, &wksModel)
 		var wksContext = WorkspaceContext{}
 		wksContext.WorkspacePath = prjFile
 		wksContext.WorkspaceHome = filepath.Dir(prjFile)

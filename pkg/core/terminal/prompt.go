@@ -17,7 +17,8 @@ package terminal
 
 import (
 	"github.com/manifoldco/promptui"
-	"github.com/nitroci/nitroci-core/pkg/core/configs"
+
+	pkgConfigs "github.com/nitroci/nitroci-core/pkg/core/configs"
 )
 
 func PromptGlobalConfigKeyAndSave(profile string, label string, secret bool, key string, save bool) (string, error) {
@@ -34,7 +35,7 @@ func PromptGlobalConfigKeyAndSave(profile string, label string, secret bool, key
 		return "", err
 	}
 	if save {
-		configs.SetGlobalConfigString(profile, key, value)
+		pkgConfigs.SetGlobalConfigString(profile, key, value)
 	}
 	return value, nil
 }

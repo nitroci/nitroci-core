@@ -22,11 +22,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/nitroci/nitroci-core/pkg/core/registries"
-	
-	extFilepath "github.com/nitroci/nitroci-core/pkg/core/extensions/filepath"
-	extOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
-	intrConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
+	pkgFilepath "github.com/nitroci/nitroci-core/pkg/core/extensions/filepath"
+	pkgOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
+	pkgRegistries "github.com/nitroci/nitroci-core/pkg/core/registries"
+	pkgIntConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
 )
 
 const (
@@ -61,11 +60,11 @@ func (c *CliContext) loadCliContext(profile string, environment string, workspac
 
 func (c *CliContext) loadCliContextSettings() (*CliContext, error) {
 	// Load globacl config configurations
-	configEnvVal := extOs.GetEnvOrFunc(ENV_NAME_CONFIG, func(s string) string {
+	configEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CONFIG, func(s string) string {
 		home, _ := os.UserHomeDir()
 		return fmt.Sprintf("%v/.nitroci/config.ini", home)
 	})
-	configPDesc, err := extFilepath.GetFilePathDescription(configEnvVal, strings.Split(EXTENSION_TYPES, ","), false)
+	configPDesc, err := pkgFilepath.GetFilePathDescription(configEnvVal, strings.Split(EXTENSION_TYPES, ","), false)
 	if err != nil {
 		return nil, err
 	}
@@ -74,10 +73,10 @@ func (c *CliContext) loadCliContextSettings() (*CliContext, error) {
 	c.Settings[CFG_NAME_CONFIG_FILE] = configPDesc.FileName
 	c.Settings[CFG_NAME_CONFIG_TYPE] = configPDesc.FileExtension
 	// Load cache configurations
-	chacheEnvVal := extOs.GetEnvOrFunc(ENV_NAME_CACHE_HOME, func(s string) string {
+	chacheEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CACHE_HOME, func(s string) string {
 		return fmt.Sprintf("%v/cache", c.Settings[CFG_NAME_CONFIG_HOME])
 	})
-	cachePDesc, err := extFilepath.GetDirPathDescription(chacheEnvVal, false)
+	cachePDesc, err := pkgFilepath.GetDirPathDescription(chacheEnvVal, false)
 	if err != nil {
 		return nil, err
 	}
@@ -85,23 +84,23 @@ func (c *CliContext) loadCliContextSettings() (*CliContext, error) {
 	c.Settings[CFG_NAME_CACHE_PLUGINS_PATH] = fmt.Sprintf("%v/plugins", cachePDesc.Home)
 	c.Settings[CFG_NAME_CACHE_BITS_PATH] = fmt.Sprintf("%v/bits", cachePDesc.Home)
 	// Load plugins configurations
-	pluginRegistryKey := extOs.GetEnvOrDefault(ENV_NAME_PLUGINS_REGISTRY, CFG_DEFVAL_PLUGINS_REGISTRY_GITHUB_URL)
-	if !registries.IsValidRegistryKey(pluginRegistryKey) {
+	pluginRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_PLUGINS_REGISTRY, CFG_DEFVAL_PLUGINS_REGISTRY_GITHUB_URL)
+	if !pkgRegistries.IsValidRegistryKey(pluginRegistryKey) {
 		return nil, fmt.Errorf("%v is not a valid registry key", pluginRegistryKey)
 	}
 	c.Settings[CFG_NAME_PLUGINS_REGISTRY] = pluginRegistryKey
 	// Load workspace configurations
-	c.Settings[CFG_NAME_WKS_FILE_FOLDER] = extOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
-	c.Settings[CFG_NAME_WKS_FILE_NAME] = extOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
+	c.Settings[CFG_NAME_WKS_FILE_FOLDER] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
+	c.Settings[CFG_NAME_WKS_FILE_NAME] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
 	// Load bits configurations
-	bitsRegistryKey := extOs.GetEnvOrDefault(ENV_NAME_BITS_REGISTRY, CFG_DEFVAL_BITS_REGISTRY_GITHUB_URL)
-	if !registries.IsValidRegistryKey(bitsRegistryKey) {
+	bitsRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_BITS_REGISTRY, CFG_DEFVAL_BITS_REGISTRY_GITHUB_URL)
+	if !pkgRegistries.IsValidRegistryKey(bitsRegistryKey) {
 		return nil, fmt.Errorf("%v is not a valid registry key", bitsRegistryKey)
 	}
 	c.Settings[CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
 	// Ensure os configuration
-	intrConfigs.EnsureConfiguration(configEnvVal)
-	err = extOs.MkdirInMap(c.Settings, []string{CFG_NAME_CONFIG_HOME, CFG_NAME_CACHE_PATH, CFG_NAME_CACHE_PLUGINS_PATH, CFG_NAME_CACHE_BITS_PATH})
+	pkgIntConfigs.EnsureConfiguration(configEnvVal)
+	err = pkgOs.MkdirInMap(c.Settings, []string{CFG_NAME_CONFIG_HOME, CFG_NAME_CACHE_PATH, CFG_NAME_CACHE_PLUGINS_PATH, CFG_NAME_CACHE_BITS_PATH})
 	if err != nil {
 		return nil, err
 	}

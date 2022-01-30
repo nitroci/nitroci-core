@@ -23,7 +23,7 @@ import (
 	"path"
 	"strings"
 
-	extJson "github.com/nitroci/nitroci-core/pkg/core/extensions/json"
+	pkgJson "github.com/nitroci/nitroci-core/pkg/core/extensions/json"
 )
 
 func basicAuth(username, password string) string {
@@ -49,7 +49,7 @@ func (httpResult *HttpResult) ToString() string {
 
 func (httpResult HttpResult) ToJson(target *interface{}) error {
 	bodyStr := httpResult.ToString()
-	_, err := extJson.IsJSON(bodyStr)
+	_, err := pkgJson.IsJSON(bodyStr)
 	if err != nil {
 		return err
 	}
