@@ -19,7 +19,6 @@ import (
 	pkgBuilder "github.com/nitroci/nitroci-core/pkg/internal/builder"
 )
 
-
 func CreateAndInitalizeContext(workspaceType string) {
 	coreBuilder := pkgBuilder.GetCoreBuilder(workspaceType)
 	director := pkgBuilder.NewDirector()
