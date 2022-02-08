@@ -20,46 +20,26 @@ import (
 	"path/filepath"
 	"strings"
 
+	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgFilesearch "github.com/nitroci/nitroci-core/pkg/core/extensions/filesearch"
 	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
 	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
-type WorkspaceContext struct {
-	WorkspacePath       string
-	WorkspaceHome       string
-	WorkspaceFileFolder string
-	WorkspaceFile       string
-	Version             int
-	Id                  string
-	Name                string
-}
-
 type VirtualContext struct {
 	Workspaces []*WorkspaceContext
 }
 
-func findWorkspaceFiles(runtimeContext *RuntimeContext) (workspaceFiles []string) {
-	wksFolder := runtimeContext.Cli.Settings[CFG_NAME_WKS_FILE_FOLDER]
-	wksFileName := runtimeContext.Cli.Settings[CFG_NAME_WKS_FILE_NAME]
-	return pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
-}
+// Creational functions
 
-func (v *WorkspaceContext) CreateWorkspaceInstance() (*pkgWorkspaces.WorkspaceModel, error) {
-	var wks = &pkgWorkspaces.WorkspaceModel{}
-	_, err := pkgYaml.LoadYamlFile(v.WorkspacePath, &wks)
-	if err != nil {
-		return nil, err
-	}
-	return wks, nil
-}
-
-func (v *VirtualContext) loadVirtualContext(runtimeContext *RuntimeContext, workspaceDepth int) (*VirtualContext, error) {
-	prjFiles := findWorkspaceFiles(runtimeContext)
+func (c *VirtualContext) load() error {
+	wksFolder := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]
+	wksFileName := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_NAME]
+	prjFiles := pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
 	prjFilesCount := len(prjFiles)
-	v.Workspaces = make([]*WorkspaceContext, prjFilesCount)
+	c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
 	if prjFilesCount == 0 {
-		return v, nil
+		return nil
 	}
 	for i, prjFile := range prjFiles {
 		var wksModel = &pkgWorkspaces.WorkspaceModel{}
@@ -68,16 +48,41 @@ func (v *VirtualContext) loadVirtualContext(runtimeContext *RuntimeContext, work
 		wksContext.WorkspacePath = prjFile
 		wksContext.WorkspaceHome = filepath.Dir(prjFile)
 		wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
-		if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[CFG_NAME_WKS_FILE_FOLDER]) {
+		if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]) {
 			wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
 		}
 		wksContext.WorkspaceFile = filepath.Base(prjFile)
 		wksContext.Version = wksModel.Version
 		wksContext.Id = wksModel.Workspace.ID
 		wksContext.Name = wksModel.Workspace.Name
-		v.Workspaces[i] = &wksContext
+		c.Workspaces[i] = &wksContext
 	}
-	return v, nil
+	return nil
+}
+
+func (c *VirtualContext) validate() error {
+	for _, wspace := range c.Workspaces {
+		err := wspace.validateWorkspaceContext()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func newVirtualContext(contextInput ContextInput) *VirtualContext {
+	return &VirtualContext{}
+}
+
+// Contexts specific functions
+
+func (v *WorkspaceContext) CreateWorkspaceInstance() (*pkgWorkspaces.WorkspaceModel, error) {
+	var wks = &pkgWorkspaces.WorkspaceModel{}
+	_, err := pkgYaml.LoadYamlFile(v.WorkspacePath, &wks)
+	if err != nil {
+		return nil, err
+	}
+	return wks, nil
 }
 
 func (v *VirtualContext) hasWorkspaces() bool {
@@ -99,21 +104,4 @@ func (v *VirtualContext) getWorkspace(workspaceDepth int) (*WorkspaceContext, er
 		return nil, errors.New("invalid workspace depth")
 	}
 	return v.Workspaces[workspaceDepth], nil
-}
-
-func (v *WorkspaceContext) validateWorkspaceContext() error {
-	if len(v.Id) == 0 {
-		return errors.New("invalid workspace")
-	}
-	return nil
-}
-
-func (v *VirtualContext) validateVirtualContext() error {
-	for _, wspace := range v.Workspaces {
-		err := wspace.validateWorkspaceContext()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

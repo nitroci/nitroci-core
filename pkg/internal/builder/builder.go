@@ -13,4 +13,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package contexts
+package builders
+
+import (
+	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+)
+
+const (
+	CORE_BUILDER_WORKSPACE_TYPE     = "workspace"
+	CORE_BUILDER_WORKSPACELESS_TYPE = "workspaceless"
+)
+
+type CoreBuilder interface {
+	getRuntimeContext() *pkgCtx.RuntimeContext
+}
+
+func GetCoreBuilder(builderType string) *CoreBuilder {
+	if builderType == CORE_BUILDER_WORKSPACE_TYPE {
+		return newWorkspaceBuilder()
+	}
+	if builderType == CORE_BUILDER_WORKSPACELESS_TYPE {
+		return newWorkspacelessBuilder()
+	}
+	return nil
+}
