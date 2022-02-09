@@ -50,7 +50,7 @@ func (v *WorkspaceContext) GetWorkspaceHome() string {
 }
 
 func (v *WorkspaceContext) GetWorkspaceFileFolder() string {
-	return v.GetWorkspaceFileFolder()
+	return v.WorkspaceFileFolder
 }
 
 func (v *WorkspaceContext) GetWorkspaceFile() string {
