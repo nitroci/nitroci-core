@@ -34,3 +34,8 @@ const (
 
 	CFG_NAME_BITS_REGISTRY = "NITROCI_BITS_REGISTRY_URI"
 )
+
+const (
+	CORE_BUILDER_WORKSPACE_TYPE     = "workspace"
+	CORE_BUILDER_WORKSPACELESS_TYPE = "workspaceless"
+)

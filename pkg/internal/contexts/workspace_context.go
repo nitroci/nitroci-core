@@ -15,8 +15,11 @@ limitations under the License.
 */
 package contexts
 
-import (
+import(
 	"errors"
+
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
+	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
 type WorkspaceContext struct {
@@ -36,4 +39,41 @@ func (v *WorkspaceContext) validateWorkspaceContext() error {
 		return errors.New("invalid workspace")
 	}
 	return nil
+}
+
+func (v *WorkspaceContext) GetWorkspacePath() string {
+	return v.WorkspacePath
+}
+
+func (v *WorkspaceContext) GetWorkspaceHome() string {
+	return v.WorkspaceHome
+}
+
+func (v *WorkspaceContext) GetWorkspaceFileFolder() string {
+	return v.GetWorkspaceFileFolder()
+}
+
+func (v *WorkspaceContext) GetWorkspaceFile() string {
+	return v.WorkspaceFile
+}
+
+func (v *WorkspaceContext) GetVersion() int {
+	return v.Version
+}
+
+func (v *WorkspaceContext) GetId() string {
+	return v.WorkspacePath
+}
+
+func (v *WorkspaceContext) GetName() string {
+	return v.Name
+}
+
+func (v *WorkspaceContext) CreateWorkspaceInstance() (*pkgWorkspaces.WorkspaceModel, error) {
+	var wks = &pkgWorkspaces.WorkspaceModel{}
+	_, err := pkgYaml.LoadYamlFile(v.WorkspacePath, &wks)
+	if err != nil {
+		return nil, err
+	}
+	return wks, nil
 }

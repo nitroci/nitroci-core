@@ -15,6 +15,10 @@ limitations under the License.
 */
 package contexts
 
+import (
+	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+)
+
 type RuntimeContext struct {
 	workspaceLess bool
 	Cli           *CliContext
@@ -47,42 +51,68 @@ func (c *RuntimeContext) validate() error {
 	return nil
 }
 
-func newRuntimeContext(contextInput ContextInput) *RuntimeContext {
-	runtimeCtx := &RuntimeContext{
+func newRuntimeContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
+	runtimeCtx := RuntimeContext{
 		workspaceLess: true,
-		Cli: newCliContext(contextInput),
+		Cli:           newCliContext(contextInput),
 	}
-	return runtimeCtx
+	return &runtimeCtx
 }
 
-func newRuntimeWorkspaceContext(contextInput ContextInput) *RuntimeContext {
-	runtimeCtx := newRuntimeContext(contextInput)
-	runtimeCtx.workspaceLess = false
-	runtimeCtx.Virtual = newVirtualContext(contextInput)
-	return runtimeCtx
+func newRuntimeWorkspaceContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
+	runtimeCtx := RuntimeContext {
+		workspaceLess: false,
+		Cli:           newCliContext(contextInput),
+		Virtual:       newVirtualContext(contextInput),
+	}
+	return &runtimeCtx
 }
 
 // Contexter specific functions
 
-type RuntimeContexter interface {
-	HasWorkspaces() bool
-	GetWorkspaces() ([]*WorkspaceContext, error)
-	GetCurrentWorkspace() (*WorkspaceContext, error)
-	GetWorkspace(workspaceDepth int) (*WorkspaceContext, error)
+func (r *RuntimeContext) GetWorkingDirectory() string {
+	return r.Cli.WorkingDirectory
+}
+
+func (r *RuntimeContext) GetProfile() string {
+	return r.Cli.Profile
+}
+
+func (r *RuntimeContext) GetEnvironment() string {
+	return r.Cli.Environment
+}
+
+func (r *RuntimeContext) GetSettings(key string) (string, bool) {
+	if val, ok := r.Cli.Settings[key]; ok {
+		return val, true
+	}
+	return "", false
+}
+
+func (r *RuntimeContext) GetVerbose() bool {
+	return r.Cli.Verbose
+}
+
+func (r *RuntimeContext) GetGoos() string {
+	return r.Cli.Goos
+}
+
+func (r *RuntimeContext) GetGoarch() string {
+	return r.Cli.Goarch
 }
 
 func (r *RuntimeContext) HasWorkspaces() bool {
 	return r.Virtual.hasWorkspaces()
 }
 
-func (r *RuntimeContext) GetWorkspaces() ([]*WorkspaceContext, error) {
+func (r *RuntimeContext) GetWorkspaces() ([]pkgCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspaces()
 }
 
-func (r *RuntimeContext) GetCurrentWorkspace() (*WorkspaceContext, error) {
+func (r *RuntimeContext) GetCurrentWorkspace() (pkgCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspace(r.Cli.WorkspaceDepth)
 }
 
-func (r *RuntimeContext) GetWorkspace(workspaceDepth int) (*WorkspaceContext, error) {
+func (r *RuntimeContext) GetWorkspace(workspaceDepth int) (pkgCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspace(workspaceDepth)
 }

@@ -19,20 +19,15 @@ import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
-const (
-	CORE_BUILDER_WORKSPACE_TYPE     = "workspace"
-	CORE_BUILDER_WORKSPACELESS_TYPE = "workspaceless"
-)
-
 type CoreBuilder interface {
-	getRuntimeContext() *pkgCtx.RuntimeContext
+	getRuntimeContext() pkgCtx.RuntimeContexter
 }
 
-func GetCoreBuilder(builderType string) *CoreBuilder {
-	if builderType == CORE_BUILDER_WORKSPACE_TYPE {
+func GetCoreBuilder(builderType string) CoreBuilder {
+	if builderType == pkgCtx.CORE_BUILDER_WORKSPACE_TYPE {
 		return newWorkspaceBuilder()
 	}
-	if builderType == CORE_BUILDER_WORKSPACELESS_TYPE {
+	if builderType == pkgCtx.CORE_BUILDER_WORKSPACELESS_TYPE {
 		return newWorkspacelessBuilder()
 	}
 	return nil

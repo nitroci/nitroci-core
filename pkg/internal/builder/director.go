@@ -33,6 +33,6 @@ func (d *Director) SetBuilder(b CoreBuilder) {
     d.CoreBuilder = b
 }
 
-func (d *Director) BuildContext() *pkgCtx.RuntimeContext {
+func (d *Director) BuildContext() pkgCtx.RuntimeContexter {
     return d.CoreBuilder.getRuntimeContext()
 }

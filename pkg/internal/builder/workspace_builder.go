@@ -16,7 +16,8 @@ limitations under the License.
 package builders
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
+	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 )
 
 type workspaceBuilder struct {
@@ -26,8 +27,8 @@ func newWorkspaceBuilder() *workspaceBuilder {
     return &workspaceBuilder{}
 }
 
-func (b *workspaceBuilder) getRuntimeContext() *pkgCtx.RuntimeContext {
-    ctxInput := &pkgCtx.ContextInput{} 
-    ctx, _ := pkgCtx.CreateContext(ctxInput, true)
+func (b *workspaceBuilder) getRuntimeContext() pkgCtx.RuntimeContexter {
+    ctxInput := pkgIntCtx.ContextInput{} 
+    ctx, _ := pkgIntCtx.CreateContext(ctxInput, true)
     return ctx
 }

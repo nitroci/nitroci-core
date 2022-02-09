@@ -16,11 +16,13 @@ limitations under the License.
 package core
 
 import (
+	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgBuilder "github.com/nitroci/nitroci-core/pkg/internal/builder"
 )
 
-func CreateAndInitalizeContext(workspaceType string) {
+func CreateAndInitalizeContext(workspaceType string) (pkgCtx.RuntimeContexter, error) {
 	coreBuilder := pkgBuilder.GetCoreBuilder(workspaceType)
-	director := pkgBuilder.NewDirector()
-	director.BuildContext()
+	director := pkgBuilder.NewDirector(coreBuilder)
+	ctx := director.BuildContext()
+	return ctx, nil
 }
