@@ -55,6 +55,7 @@ func newRuntimeContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
 	runtimeCtx := RuntimeContext{
 		workspaceLess: true,
 		Cli:           newCliContext(contextInput),
+		Virtual:       newVirtualContext(contextInput),
 	}
 	return &runtimeCtx
 }
@@ -69,6 +70,10 @@ func newRuntimeWorkspaceContext(contextInput ContextInput) pkgCtx.RuntimeContext
 }
 
 // Contexter specific functions
+
+func (r *RuntimeContext) IsWorkspaceRequired() bool {
+	return !r.workspaceLess
+}
 
 func (r *RuntimeContext) GetWorkingDirectory() string {
 	return r.Cli.WorkingDirectory

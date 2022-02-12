@@ -20,6 +20,7 @@ import (
 )
 
 type RuntimeContexter interface {
+	IsWorkspaceRequired() bool
 	GetWorkingDirectory() string
 	GetProfile() string
 	GetEnvironment() string

@@ -13,16 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package core
+package components
 
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	pkgBuilder "github.com/nitroci/nitroci-core/pkg/internal/builder"
 )
 
-func CreateAndInitalizeContext(workspaceType string) (pkgCtx.RuntimeContexter, error) {
-	coreBuilder := pkgBuilder.GetCoreBuilder(workspaceType)
-	director := pkgBuilder.NewDirector(coreBuilder)
-	ctx := director.BuildContext()
-	return ctx, nil
+type globalFoldersComponent struct {
+	baseComponent
+}
+
+func (c *globalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) {
+	c.next.Execute(ctx)
+}
+
+type localFoldersComponent struct {
+	baseComponent
+}
+
+func (c *localFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) {
+	c.next.Execute(ctx)
 }
