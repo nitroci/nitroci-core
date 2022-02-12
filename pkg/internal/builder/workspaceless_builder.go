@@ -29,6 +29,6 @@ func newWorkspacelessBuilder() *workspacelessBuilder {
 
 func (b *workspacelessBuilder) getRuntimeContext() pkgCtx.RuntimeContexter {
     ctxInput := pkgIntCtx.ContextInput{} 
-    ctx, _ := pkgIntCtx.CreateContext(ctxInput, true)
+    ctx, _ := pkgIntCtx.CreateContext(ctxInput, false)
 	return ctx
 }

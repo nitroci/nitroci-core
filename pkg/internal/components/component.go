@@ -20,7 +20,7 @@ import (
 )
 
 type component interface {
-	Execute(pkgCtx.RuntimeContexter)
+	Execute(pkgCtx.RuntimeContexter) error
 	setNext(component) component
 }
 
@@ -36,7 +36,8 @@ func (c *baseComponent) setNext(next component) component {
 func CreateChainOfComponents(ctx pkgCtx.RuntimeContexter) component {
 	var next component
 	// Initialize folders
-	next = &globalFoldersComponent{}
+	first := &globalFoldersComponent{}
+	next = first
 	if ctx.IsWorkspaceRequired() {
 		next = next.setNext(&localFoldersComponent{})
 	}
@@ -53,7 +54,7 @@ func CreateChainOfComponents(ctx pkgCtx.RuntimeContexter) component {
 	// Initialize bits
 	next = next.setNext(&globalBitsComponent{})
 	if ctx.IsWorkspaceRequired() {
-		next = next.setNext(&localBitsComponent{})
+		next.setNext(&localBitsComponent{})
 	}
-	return 	next
+	return 	first
 }

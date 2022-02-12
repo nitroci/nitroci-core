@@ -16,6 +16,8 @@ limitations under the License.
 package components
 
 import (
+	"fmt"
+
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
@@ -23,14 +25,22 @@ type globalFoldersComponent struct {
 	baseComponent
 }
 
-func (c *globalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) {
-	c.next.Execute(ctx)
+func (c *globalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+	fmt.Println("GLOBAL FOLDERS")
+	if c.next == nil {
+		return nil
+	}
+	return c.next.Execute(ctx)
 }
 
 type localFoldersComponent struct {
 	baseComponent
 }
 
-func (c *localFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) {
-	c.next.Execute(ctx)
+func (c *localFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+	fmt.Println("LOCAL FOLDERS")
+	if c.next == nil {
+		return nil
+	}
+	return c.next.Execute(ctx)
 }

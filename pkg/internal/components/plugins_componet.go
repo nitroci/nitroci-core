@@ -16,6 +16,7 @@ limitations under the License.
 package components
 
 import (
+	"fmt"
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
@@ -23,14 +24,22 @@ type globalPluginsComponent struct {
 	baseComponent
 }
 
-func (c *globalPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) {
-	c.next.Execute(ctx)
+func (c *globalPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+	fmt.Println("GLOBAL PLUGINS")
+	if c.next == nil {
+		return nil
+	}
+	return c.next.Execute(ctx)
 }
 
 type localPluginsComponent struct {
 	baseComponent
 }
 
-func (c *localPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) {
-	c.next.Execute(ctx)
+func (c *localPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+	fmt.Println("LOCAL PLUGINS")
+	if c.next == nil {
+		return nil
+	}
+	return c.next.Execute(ctx)
 }
