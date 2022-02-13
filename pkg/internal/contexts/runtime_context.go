@@ -27,12 +27,12 @@ type RuntimeContext struct {
 
 // Creational functions
 
-func (c *RuntimeContext) load() error {
-	if err := c.Cli.load(); err != nil {
+func (c *RuntimeContext) load(settings map[string]string) error {
+	if err := c.Cli.load(settings); err != nil {
 		return err
 	}
 	if !c.workspaceLess {
-		if err := c.Virtual.load(); err != nil {
+		if err := c.Virtual.load(settings); err != nil {
 			return err
 		}
 	}

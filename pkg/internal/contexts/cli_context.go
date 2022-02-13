@@ -47,7 +47,8 @@ type CliContext struct {
 
 // Creational functions
 
-func (c *CliContext) load() error {
+func (c *CliContext) load(settings map[string]string) error {
+	c.Settings[pkgCCtx.CFG_NAME_CONFIG_PATH] = pkgCCtx.CFG_NAME_WORKING_DIRECTORY
 	// Load globacl config configurations
 	configEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CONFIG, func(s string) string {
 		home, _ := os.UserHomeDir()

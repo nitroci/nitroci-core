@@ -17,11 +17,13 @@ package contexts
 
 import (
 	"errors"
-	//"path/filepath"
-	//"strings"
+	"path/filepath"
+	"strings"
 
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	//pkgFilesearch "github.com/nitroci/nitroci-core/pkg/extensions/filesearch"
+	pkgFilesearch "github.com/nitroci/nitroci-core/pkg/extensions/filesearch"
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/extensions/yaml"
+	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
 type VirtualContext struct {
@@ -30,33 +32,31 @@ type VirtualContext struct {
 
 // Creational functions
 
-func (c *VirtualContext) load() error {
-	/*
-		wksFolder := runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]
-		wksFileName := runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_NAME]
-		prjFiles := pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
-		prjFilesCount := len(prjFiles)
-		c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
-		if prjFilesCount == 0 {
-			return nil
+func (c *VirtualContext) load(settings map[string]string) error {
+	wksFolder := settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]
+	wksFileName := settings[pkgCCtx.CFG_NAME_WKS_FILE_NAME]
+	prjFiles := pkgFilesearch.InverseRecursiveFindFiles(settings[pkgCCtx.CFG_NAME_WORKING_DIRECTORY], wksFolder, wksFileName)
+	prjFilesCount := len(prjFiles)
+	c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
+	if prjFilesCount == 0 {
+		return nil
+	}
+	for i, prjFile := range prjFiles {
+		var wksModel = &pkgWorkspaces.WorkspaceModel{}
+		pkgYaml.LoadYamlFile(prjFile, &wksModel)
+		var wksContext = WorkspaceContext{}
+		wksContext.WorkspacePath = prjFile
+		wksContext.WorkspaceHome = filepath.Dir(prjFile)
+		wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
+		if strings.HasSuffix(wksContext.WorkspaceHome, settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]) {
+			wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
 		}
-		for i, prjFile := range prjFiles {
-			var wksModel = &pkgWorkspaces.WorkspaceModel{}
-			pkgYaml.LoadYamlFile(prjFile, &wksModel)
-			var wksContext = WorkspaceContext{}
-			wksContext.WorkspacePath = prjFile
-			wksContext.WorkspaceHome = filepath.Dir(prjFile)
-			wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
-			if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]) {
-				wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
-			}
-			wksContext.WorkspaceFile = filepath.Base(prjFile)
-			wksContext.Version = wksModel.Version
-			wksContext.Id = wksModel.Workspace.ID
-			wksContext.Name = wksModel.Workspace.Name
-			c.Workspaces[i] = &wksContext
-		}
-	*/
+		wksContext.WorkspaceFile = filepath.Base(prjFile)
+		wksContext.Version = wksModel.Version
+		wksContext.Id = wksModel.Workspace.ID
+		wksContext.Name = wksModel.Workspace.Name
+		c.Workspaces[i] = &wksContext
+	}
 	return nil
 }
 
