@@ -20,7 +20,9 @@ import (
 )
 
 type CoreBuilder interface {
-	getRuntimeContext() pkgCtx.RuntimeContexter
+	createRuntimeContext()
+	ensureContextConfiguration()
+	getRuntimeContext() pkgCtx.CoreContexter
 }
 
 func GetCoreBuilder(builderType string) CoreBuilder {

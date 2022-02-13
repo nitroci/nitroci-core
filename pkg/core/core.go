@@ -13,28 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package builders
+package core
 
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgIntBuilder "github.com/nitroci/nitroci-core/pkg/internal/builder"
 )
 
-type Director struct {
-    CoreBuilder
-}
 
-func NewDirector(b CoreBuilder) *Director {
-    return &Director{
-        CoreBuilder: b,
-    }
-}
-
-func (d *Director) SetBuilder(b CoreBuilder) {
-    d.CoreBuilder = b
-}
-
-func (d *Director) BuildContext() pkgCtx.CoreContexter {
-    d.createRuntimeContext()
-    d.ensureContextConfiguration()
-    return d.getRuntimeContext()
+func CreateAndInitalizeContext(workspaceType string) (pkgCtx.CoreContexter, error) {
+	coreBuilder := pkgIntBuilder.GetCoreBuilder(workspaceType)
+	director := pkgIntBuilder.NewDirector(coreBuilder)
+	return director.BuildContext(), nil
 }

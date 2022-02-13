@@ -23,7 +23,7 @@ import (
 	"path"
 	"strings"
 
-	pkgJson "github.com/nitroci/nitroci-core/pkg/core/extensions/json"
+	pkgJson "github.com/nitroci/nitroci-core/pkg/extensions/json"
 )
 
 func basicAuth(username, password string) string {

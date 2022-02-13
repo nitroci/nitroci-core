@@ -19,6 +19,10 @@ import (
 	pkgWks "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
+type CoreContexter interface {
+	GetRuntimeCtx() RuntimeContexter
+}
+
 type RuntimeContexter interface {
 	IsWorkspaceRequired() bool
 	GetWorkingDirectory() string

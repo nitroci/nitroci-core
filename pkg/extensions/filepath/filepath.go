@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	pkgStrings "github.com/nitroci/nitroci-core/pkg/core/extensions/strings"
+	pkgStrings "github.com/nitroci/nitroci-core/pkg/extensions/strings"
 )
 
 type PathDescription struct {

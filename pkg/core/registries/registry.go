@@ -23,11 +23,11 @@ import (
 	"path"
 	"strings"
 
-	pkgHttp "github.com/nitroci/nitroci-core/pkg/core/extensions/http"
-	pkgOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
-	pkgTar "github.com/nitroci/nitroci-core/pkg/core/extensions/tar"
-	pkgTemplate "github.com/nitroci/nitroci-core/pkg/core/extensions/template"
-	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
+	pkgHttp "github.com/nitroci/nitroci-core/pkg/extensions/http"
+	pkgOs "github.com/nitroci/nitroci-core/pkg/extensions/os"
+	pkgTar "github.com/nitroci/nitroci-core/pkg/extensions/tar"
+	pkgTemplate "github.com/nitroci/nitroci-core/pkg/extensions/template"
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/extensions/yaml"
 )
 
 const (

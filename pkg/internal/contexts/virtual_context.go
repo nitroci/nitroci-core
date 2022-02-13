@@ -21,7 +21,7 @@ import (
 	//"strings"
 
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	//pkgFilesearch "github.com/nitroci/nitroci-core/pkg/core/extensions/filesearch"
+	//pkgFilesearch "github.com/nitroci/nitroci-core/pkg/extensions/filesearch"
 )
 
 type VirtualContext struct {
@@ -32,30 +32,30 @@ type VirtualContext struct {
 
 func (c *VirtualContext) load() error {
 	/*
-	wksFolder := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]
-	wksFileName := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_NAME]
-	prjFiles := pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
-	prjFilesCount := len(prjFiles)
-	c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
-	if prjFilesCount == 0 {
-		return nil
-	}
-	for i, prjFile := range prjFiles {
-		var wksModel = &pkgWorkspaces.WorkspaceModel{}
-		pkgYaml.LoadYamlFile(prjFile, &wksModel)
-		var wksContext = WorkspaceContext{}
-		wksContext.WorkspacePath = prjFile
-		wksContext.WorkspaceHome = filepath.Dir(prjFile)
-		wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
-		if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]) {
-			wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
+		wksFolder := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]
+		wksFileName := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_NAME]
+		prjFiles := pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
+		prjFilesCount := len(prjFiles)
+		c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
+		if prjFilesCount == 0 {
+			return nil
 		}
-		wksContext.WorkspaceFile = filepath.Base(prjFile)
-		wksContext.Version = wksModel.Version
-		wksContext.Id = wksModel.Workspace.ID
-		wksContext.Name = wksModel.Workspace.Name
-		c.Workspaces[i] = &wksContext
-	}
+		for i, prjFile := range prjFiles {
+			var wksModel = &pkgWorkspaces.WorkspaceModel{}
+			pkgYaml.LoadYamlFile(prjFile, &wksModel)
+			var wksContext = WorkspaceContext{}
+			wksContext.WorkspacePath = prjFile
+			wksContext.WorkspaceHome = filepath.Dir(prjFile)
+			wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
+			if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]) {
+				wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
+			}
+			wksContext.WorkspaceFile = filepath.Base(prjFile)
+			wksContext.Version = wksModel.Version
+			wksContext.Id = wksModel.Workspace.ID
+			wksContext.Name = wksModel.Workspace.Name
+			c.Workspaces[i] = &wksContext
+		}
 	*/
 	return nil
 }
@@ -84,7 +84,7 @@ func (v *VirtualContext) getWorkspaces() ([]pkgCtx.WorkspaceContexter, error) {
 	if v.Workspaces == nil || len(v.Workspaces) == 0 {
 		return nil, errors.New("please initialize a valid workspace")
 	}
-	var wctx = []pkgCtx.WorkspaceContexter {}
+	var wctx = []pkgCtx.WorkspaceContexter{}
 	for _, element := range v.Workspaces {
 		wctx = append(wctx, element)
 	}

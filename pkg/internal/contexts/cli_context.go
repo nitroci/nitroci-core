@@ -23,9 +23,9 @@ import (
 	"strings"
 
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	pkgFilepath "github.com/nitroci/nitroci-core/pkg/core/extensions/filepath"
-	pkgOs "github.com/nitroci/nitroci-core/pkg/core/extensions/os"
 	pkgRegistries "github.com/nitroci/nitroci-core/pkg/core/registries"
+	pkgFilepath "github.com/nitroci/nitroci-core/pkg/extensions/filepath"
+	pkgOs "github.com/nitroci/nitroci-core/pkg/extensions/os"
 	pkgIntConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
 )
 

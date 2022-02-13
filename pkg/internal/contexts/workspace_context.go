@@ -15,11 +15,11 @@ limitations under the License.
 */
 package contexts
 
-import(
+import (
 	"errors"
 
-	pkgYaml "github.com/nitroci/nitroci-core/pkg/core/extensions/yaml"
 	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
+	pkgYaml "github.com/nitroci/nitroci-core/pkg/extensions/yaml"
 )
 
 type WorkspaceContext struct {

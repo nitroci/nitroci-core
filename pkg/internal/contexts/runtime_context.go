@@ -51,7 +51,7 @@ func (c *RuntimeContext) validate() error {
 	return nil
 }
 
-func newRuntimeContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
+func newRuntimeContext(contextInput ContextInput) *RuntimeContext {
 	runtimeCtx := RuntimeContext{
 		workspaceLess: true,
 		Cli:           newCliContext(contextInput),
@@ -60,7 +60,7 @@ func newRuntimeContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
 	return &runtimeCtx
 }
 
-func newRuntimeWorkspaceContext(contextInput ContextInput) pkgCtx.RuntimeContexter {
+func newRuntimeWorkspaceContext(contextInput ContextInput) *RuntimeContext {
 	runtimeCtx := RuntimeContext {
 		workspaceLess: false,
 		Cli:           newCliContext(contextInput),

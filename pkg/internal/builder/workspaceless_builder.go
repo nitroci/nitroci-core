@@ -18,17 +18,31 @@ package builders
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
+	pkgIntComponents "github.com/nitroci/nitroci-core/pkg/internal/components"
 )
 
 type workspacelessBuilder struct {
+	ctx pkgCtx.CoreContexter
 }
 
 func newWorkspacelessBuilder() *workspacelessBuilder {
 	return &workspacelessBuilder{}
 }
 
-func (b *workspacelessBuilder) getRuntimeContext() pkgCtx.RuntimeContexter {
+func (b *workspacelessBuilder) createRuntimeContext() {
     ctxInput := pkgIntCtx.ContextInput{} 
-    ctx, _ := pkgIntCtx.CreateContext(ctxInput, false)
-	return ctx
+    runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
+	b.ctx = &pkgIntCtx.CoreContext{
+		RuntimeCtx: runtimeCtx,
+	}
+}
+
+func (b *workspacelessBuilder) ensureContextConfiguration() {
+	runtimeCtx := b.ctx.GetRuntimeCtx()
+    component := pkgIntComponents.CreateChainOfComponents(runtimeCtx)
+	component.Execute(runtimeCtx)
+}
+
+func (b *workspacelessBuilder) getRuntimeContext() pkgCtx.CoreContexter {
+    return b.ctx
 }
