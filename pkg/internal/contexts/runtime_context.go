@@ -16,7 +16,7 @@ limitations under the License.
 package contexts
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type RuntimeContext struct {
@@ -51,20 +51,20 @@ func (c *RuntimeContext) validate() error {
 	return nil
 }
 
-func newRuntimeContext(contextInput ContextInput) *RuntimeContext {
+func newRuntimeContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) *RuntimeContext {
 	runtimeCtx := RuntimeContext{
 		workspaceLess: true,
-		Cli:           newCliContext(contextInput),
-		Virtual:       newVirtualContext(contextInput),
+		Cli:           newCliContext(coreContextBuilderInput),
+		Virtual:       newVirtualContext(coreContextBuilderInput),
 	}
 	return &runtimeCtx
 }
 
-func newRuntimeWorkspaceContext(contextInput ContextInput) *RuntimeContext {
-	runtimeCtx := RuntimeContext {
+func newRuntimeWorkspaceContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) *RuntimeContext {
+	runtimeCtx := RuntimeContext{
 		workspaceLess: false,
-		Cli:           newCliContext(contextInput),
-		Virtual:       newVirtualContext(contextInput),
+		Cli:           newCliContext(coreContextBuilderInput),
+		Virtual:       newVirtualContext(coreContextBuilderInput),
 	}
 	return &runtimeCtx
 }
@@ -110,14 +110,14 @@ func (r *RuntimeContext) HasWorkspaces() bool {
 	return r.Virtual.hasWorkspaces()
 }
 
-func (r *RuntimeContext) GetWorkspaces() ([]pkgCtx.WorkspaceContexter, error) {
+func (r *RuntimeContext) GetWorkspaces() ([]pkgCCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspaces()
 }
 
-func (r *RuntimeContext) GetCurrentWorkspace() (pkgCtx.WorkspaceContexter, error) {
+func (r *RuntimeContext) GetCurrentWorkspace() (pkgCCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspace(r.Cli.WorkspaceDepth)
 }
 
-func (r *RuntimeContext) GetWorkspace(workspaceDepth int) (pkgCtx.WorkspaceContexter, error) {
+func (r *RuntimeContext) GetWorkspace(workspaceDepth int) (pkgCCtx.WorkspaceContexter, error) {
 	return r.Virtual.getWorkspace(workspaceDepth)
 }

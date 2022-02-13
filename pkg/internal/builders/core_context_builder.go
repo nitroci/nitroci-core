@@ -16,20 +16,20 @@ limitations under the License.
 package builders
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type CoreContextBuilder interface {
-	createCoreContext()
-	initializeCoreContext()
-	getCoreContext() pkgCtx.CoreContexter
+	createCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput)
+	initializeCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput)
+	getCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) pkgCCtx.CoreContexter
 }
 
 func GetCoreBuilder(builderType string) CoreContextBuilder {
-	if builderType == pkgCtx.CORE_BUILDER_WORKSPACE_TYPE {
+	if builderType == pkgCCtx.CORE_BUILDER_WORKSPACE_TYPE {
 		return newWorkspaceBuilder()
 	}
-	if builderType == pkgCtx.CORE_BUILDER_WORKSPACELESS_TYPE {
+	if builderType == pkgCCtx.CORE_BUILDER_WORKSPACELESS_TYPE {
 		return newWorkspacelessBuilder()
 	}
 	return nil

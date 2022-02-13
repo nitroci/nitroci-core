@@ -16,7 +16,7 @@ limitations under the License.
 package contexts
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type CoreContext struct {
@@ -25,6 +25,6 @@ type CoreContext struct {
 
 // Contexter specific functions
 
-func (c CoreContext) GetRuntimeCtx() pkgCtx.RuntimeContexter {
+func (c CoreContext) GetRuntimeCtx() pkgCCtx.RuntimeContexter {
 	return c.RuntimeCtx
 }

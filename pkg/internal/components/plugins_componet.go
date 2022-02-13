@@ -18,14 +18,14 @@ package components
 import (
 	"fmt"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type GlobalPluginsComponent struct {
 	BaseComponent
 }
 
-func (c *GlobalPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalPluginsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL PLUGINS")
 	if c.next == nil {
 		return nil
@@ -37,7 +37,7 @@ type LocalPluginsComponent struct {
 	BaseComponent
 }
 
-func (c *LocalPluginsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalPluginsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL PLUGINS")
 	if c.next == nil {
 		return nil

@@ -18,14 +18,14 @@ package components
 import (
 	"fmt"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type GlobalCacheComponent struct {
 	BaseComponent
 }
 
-func (c *GlobalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalCacheComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL CACHE")
 	if c.next == nil {
 		return nil
@@ -37,7 +37,7 @@ type LocalCacheComponent struct {
 	BaseComponent
 }
 
-func (c *LocalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalCacheComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL CACHE")
 	if c.next == nil {
 		return nil

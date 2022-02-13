@@ -20,7 +20,7 @@ import (
 	//"path/filepath"
 	//"strings"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	//pkgFilesearch "github.com/nitroci/nitroci-core/pkg/extensions/filesearch"
 )
 
@@ -32,8 +32,8 @@ type VirtualContext struct {
 
 func (c *VirtualContext) load() error {
 	/*
-		wksFolder := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]
-		wksFileName := runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_NAME]
+		wksFolder := runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]
+		wksFileName := runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_NAME]
 		prjFiles := pkgFilesearch.InverseRecursiveFindFiles(runtimeContext.Cli.WorkingDirectory, wksFolder, wksFileName)
 		prjFilesCount := len(prjFiles)
 		c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
@@ -47,7 +47,7 @@ func (c *VirtualContext) load() error {
 			wksContext.WorkspacePath = prjFile
 			wksContext.WorkspaceHome = filepath.Dir(prjFile)
 			wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
-			if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER]) {
+			if strings.HasSuffix(wksContext.WorkspaceHome, runtimeContext.Cli.Settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]) {
 				wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
 			}
 			wksContext.WorkspaceFile = filepath.Base(prjFile)
@@ -70,7 +70,7 @@ func (c *VirtualContext) validate() error {
 	return nil
 }
 
-func newVirtualContext(contextInput ContextInput) *VirtualContext {
+func newVirtualContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) *VirtualContext {
 	return &VirtualContext{}
 }
 
@@ -80,18 +80,18 @@ func (v *VirtualContext) hasWorkspaces() bool {
 	return v.Workspaces != nil && len(v.Workspaces) > 0
 }
 
-func (v *VirtualContext) getWorkspaces() ([]pkgCtx.WorkspaceContexter, error) {
+func (v *VirtualContext) getWorkspaces() ([]pkgCCtx.WorkspaceContexter, error) {
 	if v.Workspaces == nil || len(v.Workspaces) == 0 {
 		return nil, errors.New("please initialize a valid workspace")
 	}
-	var wctx = []pkgCtx.WorkspaceContexter{}
+	var wctx = []pkgCCtx.WorkspaceContexter{}
 	for _, element := range v.Workspaces {
 		wctx = append(wctx, element)
 	}
 	return wctx, nil
 }
 
-func (v *VirtualContext) getWorkspace(workspaceDepth int) (pkgCtx.WorkspaceContexter, error) {
+func (v *VirtualContext) getWorkspace(workspaceDepth int) (pkgCCtx.WorkspaceContexter, error) {
 	if v.Workspaces == nil || len(v.Workspaces) == 0 {
 		return nil, errors.New("please initialize a valid workspace")
 	}

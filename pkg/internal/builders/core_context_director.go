@@ -16,7 +16,7 @@ limitations under the License.
 package builders
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type Director struct {
@@ -33,8 +33,8 @@ func (d *Director) SetBuilder(b CoreContextBuilder) {
 	d.CoreContextBuilder = b
 }
 
-func (d *Director) BuildContext() pkgCtx.CoreContexter {
-	d.createCoreContext()
-	d.initializeCoreContext()
-	return d.getCoreContext()
+func (d *Director) BuildContext(ctxInput pkgCCtx.CoreContextBuilderInput) pkgCCtx.CoreContexter {
+	d.createCoreContext(ctxInput)
+	d.initializeCoreContext(ctxInput)
+	return d.getCoreContext(ctxInput)
 }

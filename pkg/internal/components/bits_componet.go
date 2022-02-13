@@ -18,14 +18,14 @@ package components
 import (
 	"fmt"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type GlobalBitsComponent struct {
 	BaseComponent
 }
 
-func (c *GlobalBitsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalBitsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL BITS")
 	if c.next == nil {
 		return nil
@@ -37,7 +37,7 @@ type LocalBitsComponent struct {
 	BaseComponent
 }
 
-func (c *LocalBitsComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalBitsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL BITS")
 	if c.next == nil {
 		return nil

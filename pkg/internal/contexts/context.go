@@ -15,6 +15,10 @@ limitations under the License.
 */
 package contexts
 
+import (
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+)
+
 type Contexter interface {
 	load() error
 	validate() error
@@ -34,12 +38,12 @@ func (c *context) createCoreContext() error {
 	return nil
 }
 
-func CreateContext(contextInput ContextInput, enableWorkspace bool) (*RuntimeContext, error) {
+func CreateContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput, enableWorkspace bool) (*RuntimeContext, error) {
 	var runtimeCtx *RuntimeContext
 	if enableWorkspace {
-		runtimeCtx = newRuntimeWorkspaceContext(contextInput)
+		runtimeCtx = newRuntimeWorkspaceContext(coreContextBuilderInput)
 	} else {
-		runtimeCtx = newRuntimeContext(contextInput)
+		runtimeCtx = newRuntimeContext(coreContextBuilderInput)
 	}
 	ctx := context{
 		Contexter: runtimeCtx,

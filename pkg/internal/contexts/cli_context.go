@@ -22,7 +22,7 @@ import (
 	"runtime"
 	"strings"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgRegistries "github.com/nitroci/nitroci-core/pkg/core/registries"
 	pkgFilepath "github.com/nitroci/nitroci-core/pkg/extensions/filepath"
 	pkgOs "github.com/nitroci/nitroci-core/pkg/extensions/os"
@@ -57,36 +57,36 @@ func (c *CliContext) load() error {
 	if err != nil {
 		return err
 	}
-	c.Settings[pkgCtx.CFG_NAME_CONFIG_PATH] = configPDesc.Path
-	c.Settings[pkgCtx.CFG_NAME_CONFIG_HOME] = configPDesc.Home
-	c.Settings[pkgCtx.CFG_NAME_CONFIG_FILE] = configPDesc.FileName
-	c.Settings[pkgCtx.CFG_NAME_CONFIG_TYPE] = configPDesc.FileExtension
+	c.Settings[pkgCCtx.CFG_NAME_CONFIG_PATH] = configPDesc.Path
+	c.Settings[pkgCCtx.CFG_NAME_CONFIG_HOME] = configPDesc.Home
+	c.Settings[pkgCCtx.CFG_NAME_CONFIG_FILE] = configPDesc.FileName
+	c.Settings[pkgCCtx.CFG_NAME_CONFIG_TYPE] = configPDesc.FileExtension
 	// Load cache configurations
 	chacheEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CACHE_HOME, func(s string) string {
-		return fmt.Sprintf("%v/cache", c.Settings[pkgCtx.CFG_NAME_CONFIG_HOME])
+		return fmt.Sprintf("%v/cache", c.Settings[pkgCCtx.CFG_NAME_CONFIG_HOME])
 	})
 	cachePDesc, err := pkgFilepath.GetDirPathDescription(chacheEnvVal, false)
 	if err != nil {
 		return err
 	}
-	c.Settings[pkgCtx.CFG_NAME_CACHE_PATH] = cachePDesc.Home
-	c.Settings[pkgCtx.CFG_NAME_CACHE_PLUGINS_PATH] = fmt.Sprintf("%v/plugins", cachePDesc.Home)
-	c.Settings[pkgCtx.CFG_NAME_CACHE_BITS_PATH] = fmt.Sprintf("%v/bits", cachePDesc.Home)
+	c.Settings[pkgCCtx.CFG_NAME_CACHE_PATH] = cachePDesc.Home
+	c.Settings[pkgCCtx.CFG_NAME_CACHE_PLUGINS_PATH] = fmt.Sprintf("%v/plugins", cachePDesc.Home)
+	c.Settings[pkgCCtx.CFG_NAME_CACHE_BITS_PATH] = fmt.Sprintf("%v/bits", cachePDesc.Home)
 	// Load plugins configurations
 	pluginRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_PLUGINS_REGISTRY, CFG_DEFVAL_PLUGINS_REGISTRY_GITHUB_URL)
 	if !pkgRegistries.IsValidRegistryKey(pluginRegistryKey) {
 		return fmt.Errorf("%v is not a valid registry key", pluginRegistryKey)
 	}
-	c.Settings[pkgCtx.CFG_NAME_PLUGINS_REGISTRY] = pluginRegistryKey
+	c.Settings[pkgCCtx.CFG_NAME_PLUGINS_REGISTRY] = pluginRegistryKey
 	// Load workspace configurations
-	c.Settings[pkgCtx.CFG_NAME_WKS_FILE_FOLDER] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
-	c.Settings[pkgCtx.CFG_NAME_WKS_FILE_NAME] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
+	c.Settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
+	c.Settings[pkgCCtx.CFG_NAME_WKS_FILE_NAME] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
 	// Load bits configurations
 	bitsRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_BITS_REGISTRY, CFG_DEFVAL_BITS_REGISTRY_GITHUB_URL)
 	if !pkgRegistries.IsValidRegistryKey(bitsRegistryKey) {
 		return fmt.Errorf("%v is not a valid registry key", bitsRegistryKey)
 	}
-	c.Settings[pkgCtx.CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
+	c.Settings[pkgCCtx.CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
 	return nil
 }
 
@@ -97,14 +97,14 @@ func (c *CliContext) validate() error {
 	return nil
 }
 
-func newCliContext(contextInput ContextInput) *CliContext {
+func newCliContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) *CliContext {
 	return &CliContext{
-		WorkingDirectory: contextInput.workingDirectory,
-		Profile:          contextInput.profile,
-		Environment:      contextInput.environment,
-		WorkspaceDepth:   contextInput.workspaceDepth,
+		WorkingDirectory: coreContextBuilderInput.WorkingDirectory,
+		Profile:          coreContextBuilderInput.Profile,
+		Environment:      coreContextBuilderInput.Environment,
+		WorkspaceDepth:   coreContextBuilderInput.WorkspaceDepth,
 		Settings:         map[string]string{},
-		Verbose:          contextInput.verbose,
+		Verbose:          coreContextBuilderInput.Verbose,
 		Goos:             runtime.GOOS,
 		Goarch:           runtime.GOARCH,
 	}

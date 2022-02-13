@@ -16,13 +16,13 @@ limitations under the License.
 package builders
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgIntComp "github.com/nitroci/nitroci-core/pkg/internal/components"
 	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 )
 
 type workspaceBuilder struct {
-	ctx pkgCtx.CoreContexter
+	ctx pkgCCtx.CoreContexter
 }
 
 // Creational functions
@@ -33,15 +33,14 @@ func newWorkspaceBuilder() *workspaceBuilder {
 
 // Builder specific functions
 
-func (b *workspaceBuilder) createCoreContext() {
-	ctxInput := pkgIntCtx.ContextInput{}
+func (b *workspaceBuilder) createCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) {
 	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
 	b.ctx = &pkgIntCtx.CoreContext{
 		RuntimeCtx: runtimeCtx,
 	}
 }
 
-func (b *workspaceBuilder) initializeCoreContext() {
+func (b *workspaceBuilder) initializeCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) {
 	var next pkgIntComp.Component
 	// Initialize folders
 	first := &pkgIntComp.GlobalFoldersComponent{}
@@ -60,6 +59,6 @@ func (b *workspaceBuilder) initializeCoreContext() {
 	first.Execute(runtimeCtx)
 }
 
-func (b *workspaceBuilder) getCoreContext() pkgCtx.CoreContexter {
+func (b *workspaceBuilder) getCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) pkgCCtx.CoreContexter {
 	return b.ctx
 }

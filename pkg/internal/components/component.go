@@ -16,11 +16,11 @@ limitations under the License.
 package components
 
 import (
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type Component interface {
-	Execute(pkgCtx.RuntimeContexter) error
+	Execute(pkgCCtx.RuntimeContexter) error
 	SetNext(Component) Component
 }
 

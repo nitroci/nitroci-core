@@ -18,14 +18,14 @@ package components
 import (
 	"fmt"
 
-	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
 type GlobalFoldersComponent struct {
 	BaseComponent
 }
 
-func (c *GlobalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalFoldersComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL FOLDERS")
 	if c.next == nil {
 		return nil
@@ -37,7 +37,7 @@ type LocalFoldersComponent struct {
 	BaseComponent
 }
 
-func (c *LocalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalFoldersComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL FOLDERS")
 	if c.next == nil {
 		return nil

@@ -19,7 +19,7 @@ import (
 	pkgWks "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
-type ContextInput struct {
+type CoreContextBuilderInput struct {
 	WorkingDirectory string
 	Profile          string
 	Environment      string
