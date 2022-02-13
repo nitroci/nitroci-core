@@ -19,42 +19,16 @@ import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
-type component interface {
+type Component interface {
 	Execute(pkgCtx.RuntimeContexter) error
-	setNext(component) component
+	SetNext(Component) Component
 }
 
-type baseComponent struct {
-	next component
+type BaseComponent struct {
+	next Component
 }
 
-func (c *baseComponent) setNext(next component) component {
+func (c *BaseComponent) SetNext(next Component) Component {
 	c.next = next
 	return next
-}
-
-func CreateChainOfComponents(ctx pkgCtx.RuntimeContexter) component {
-	var next component
-	// Initialize folders
-	first := &globalFoldersComponent{}
-	next = first
-	if ctx.IsWorkspaceRequired() {
-		next = next.setNext(&localFoldersComponent{})
-	}
-	// Initialize cache
-	next = next.setNext(&globalCacheComponent{})
-	if ctx.IsWorkspaceRequired() {
-		next = next.setNext(&localCacheComponent{})
-	}
-	// Initialize plugins
-	next = next.setNext(&globalPluginsComponent{})
-	if ctx.IsWorkspaceRequired() {
-		next = next.setNext(&localPluginsComponent{})
-	}
-	// Initialize bits
-	next = next.setNext(&globalBitsComponent{})
-	if ctx.IsWorkspaceRequired() {
-		next.setNext(&localBitsComponent{})
-	}
-	return 	first
 }

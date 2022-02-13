@@ -21,11 +21,11 @@ import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
-type globalCacheComponent struct {
-	baseComponent
+type GlobalCacheComponent struct {
+	BaseComponent
 }
 
-func (c *globalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL CACHE")
 	if c.next == nil {
 		return nil
@@ -33,11 +33,11 @@ func (c *globalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	return c.next.Execute(ctx)
 }
 
-type localCacheComponent struct {
-	baseComponent
+type LocalCacheComponent struct {
+	BaseComponent
 }
 
-func (c *localCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalCacheComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL CACHE")
 	if c.next == nil {
 		return nil

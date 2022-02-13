@@ -18,7 +18,7 @@ package builders
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
-	pkgIntComponents "github.com/nitroci/nitroci-core/pkg/internal/components"
+	pkgIntComp "github.com/nitroci/nitroci-core/pkg/internal/components"
 )
 
 type workspaceBuilder struct {
@@ -38,9 +38,22 @@ func (b *workspaceBuilder) createRuntimeContext() {
 }
 
 func (b *workspaceBuilder) ensureContextConfiguration() {
+	var next pkgIntComp.Component
+	// Initialize folders
+	first := &pkgIntComp.GlobalFoldersComponent{}
+	next = first
+    next = next.SetNext(&pkgIntComp.LocalFoldersComponent{})
+	// Initialize cache
+	next = next.SetNext(&pkgIntComp.GlobalCacheComponent{})
+    next = next.SetNext(&pkgIntComp.LocalCacheComponent{})
+	// Initialize plugins
+	next = next.SetNext(&pkgIntComp.GlobalPluginsComponent{})
+    next = next.SetNext(&pkgIntComp.LocalPluginsComponent{})
+	// Initialize bits
+	next = next.SetNext(&pkgIntComp.GlobalBitsComponent{})
+    next.SetNext(&pkgIntComp.LocalBitsComponent{})
 	runtimeCtx := b.ctx.GetRuntimeCtx()
-    component := pkgIntComponents.CreateChainOfComponents(runtimeCtx)
-	component.Execute(runtimeCtx)
+	first.Execute(runtimeCtx)
 }
 
 func (b *workspaceBuilder) getRuntimeContext() pkgCtx.CoreContexter {

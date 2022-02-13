@@ -21,11 +21,11 @@ import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
-type globalFoldersComponent struct {
-	baseComponent
+type GlobalFoldersComponent struct {
+	BaseComponent
 }
 
-func (c *globalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *GlobalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	fmt.Println("GLOBAL FOLDERS")
 	if c.next == nil {
 		return nil
@@ -33,11 +33,11 @@ func (c *globalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	return c.next.Execute(ctx)
 }
 
-type localFoldersComponent struct {
-	baseComponent
+type LocalFoldersComponent struct {
+	BaseComponent
 }
 
-func (c *localFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
+func (c *LocalFoldersComponent) Execute(ctx pkgCtx.RuntimeContexter) error {
 	fmt.Println("LOCAL FOLDERS")
 	if c.next == nil {
 		return nil
