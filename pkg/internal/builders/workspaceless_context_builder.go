@@ -17,45 +17,45 @@ package builders
 
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 	pkgIntComp "github.com/nitroci/nitroci-core/pkg/internal/components"
+	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 )
 
-type workspaceBuilder struct {
-    ctx pkgCtx.CoreContexter
+type workspacelessBuilder struct {
+	ctx pkgCtx.CoreContexter
 }
 
-func newWorkspaceBuilder() *workspaceBuilder {
-    return &workspaceBuilder{}
+// Creational functions
+
+func newWorkspacelessBuilder() *workspacelessBuilder {
+	return &workspacelessBuilder{}
 }
 
-func (b *workspaceBuilder) createRuntimeContext() {
-    ctxInput := pkgIntCtx.ContextInput{} 
-    runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
+// Builder specific functions
+
+func (b *workspacelessBuilder) createCoreContext() {
+	ctxInput := pkgIntCtx.ContextInput{}
+	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
 	b.ctx = &pkgIntCtx.CoreContext{
 		RuntimeCtx: runtimeCtx,
 	}
 }
 
-func (b *workspaceBuilder) ensureContextConfiguration() {
+func (b *workspacelessBuilder) initializeCoreContext() {
 	var next pkgIntComp.Component
 	// Initialize folders
 	first := &pkgIntComp.GlobalFoldersComponent{}
 	next = first
-    next = next.SetNext(&pkgIntComp.LocalFoldersComponent{})
 	// Initialize cache
 	next = next.SetNext(&pkgIntComp.GlobalCacheComponent{})
-    next = next.SetNext(&pkgIntComp.LocalCacheComponent{})
 	// Initialize plugins
 	next = next.SetNext(&pkgIntComp.GlobalPluginsComponent{})
-    next = next.SetNext(&pkgIntComp.LocalPluginsComponent{})
 	// Initialize bits
-	next = next.SetNext(&pkgIntComp.GlobalBitsComponent{})
-    next.SetNext(&pkgIntComp.LocalBitsComponent{})
+	next.SetNext(&pkgIntComp.GlobalBitsComponent{})
 	runtimeCtx := b.ctx.GetRuntimeCtx()
 	first.Execute(runtimeCtx)
 }
 
-func (b *workspaceBuilder) getRuntimeContext() pkgCtx.CoreContexter {
-    return b.ctx
+func (b *workspacelessBuilder) getCoreContext() pkgCtx.CoreContexter {
+	return b.ctx
 }

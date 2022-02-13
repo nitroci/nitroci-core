@@ -17,12 +17,11 @@ package core
 
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	pkgIntBuilder "github.com/nitroci/nitroci-core/pkg/internal/builder"
+	pkgIntBuilders "github.com/nitroci/nitroci-core/pkg/internal/builders"
 )
 
-
-func CreateAndInitalizeContext(workspaceType string) (pkgCtx.CoreContexter, error) {
-	coreBuilder := pkgIntBuilder.GetCoreBuilder(workspaceType)
-	director := pkgIntBuilder.NewDirector(coreBuilder)
+func CreateAndInitalizeContext(workspaceType string, ctxInput pkgCtx.ContextInput) (pkgCtx.CoreContexter, error) {
+	coreBuilder := pkgIntBuilders.GetCoreBuilder(workspaceType)
+	director := pkgIntBuilders.NewDirector(coreBuilder)
 	return director.BuildContext(), nil
 }

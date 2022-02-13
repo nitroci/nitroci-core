@@ -20,21 +20,21 @@ import (
 )
 
 type Director struct {
-    CoreBuilder
+	CoreContextBuilder
 }
 
-func NewDirector(b CoreBuilder) *Director {
-    return &Director{
-        CoreBuilder: b,
-    }
+func NewDirector(b CoreContextBuilder) *Director {
+	return &Director{
+		CoreContextBuilder: b,
+	}
 }
 
-func (d *Director) SetBuilder(b CoreBuilder) {
-    d.CoreBuilder = b
+func (d *Director) SetBuilder(b CoreContextBuilder) {
+	d.CoreContextBuilder = b
 }
 
 func (d *Director) BuildContext() pkgCtx.CoreContexter {
-    d.createRuntimeContext()
-    d.ensureContextConfiguration()
-    return d.getRuntimeContext()
+	d.createCoreContext()
+	d.initializeCoreContext()
+	return d.getCoreContext()
 }

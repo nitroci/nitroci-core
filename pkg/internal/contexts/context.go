@@ -15,16 +15,16 @@ limitations under the License.
 */
 package contexts
 
-type iContext interface {
+type Contexter interface {
 	load() error
 	validate() error
 }
 
 type context struct {
-	iContext
+	Contexter
 }
 
-func (c *context) createContext() error {
+func (c *context) createCoreContext() error {
 	if err := c.load(); err != nil {
 		return err
 	}
@@ -32,14 +32,6 @@ func (c *context) createContext() error {
 		return err
 	}
 	return nil
-}
-
-type ContextInput struct {
-	workingDirectory string
-	profile          string
-	environment      string
-	workspaceDepth   int
-	verbose          bool
 }
 
 func CreateContext(contextInput ContextInput, enableWorkspace bool) (*RuntimeContext, error) {
@@ -50,8 +42,8 @@ func CreateContext(contextInput ContextInput, enableWorkspace bool) (*RuntimeCon
 		runtimeCtx = newRuntimeContext(contextInput)
 	}
 	ctx := context{
-		iContext: runtimeCtx,
+		Contexter: runtimeCtx,
 	}
-	ctx.createContext()
+	ctx.createCoreContext()
 	return runtimeCtx, nil
 }

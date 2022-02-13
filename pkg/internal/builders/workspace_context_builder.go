@@ -17,41 +17,49 @@ package builders
 
 import (
 	pkgCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
-	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 	pkgIntComp "github.com/nitroci/nitroci-core/pkg/internal/components"
+	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 )
 
-type workspacelessBuilder struct {
+type workspaceBuilder struct {
 	ctx pkgCtx.CoreContexter
 }
 
-func newWorkspacelessBuilder() *workspacelessBuilder {
-	return &workspacelessBuilder{}
+// Creational functions
+
+func newWorkspaceBuilder() *workspaceBuilder {
+	return &workspaceBuilder{}
 }
 
-func (b *workspacelessBuilder) createRuntimeContext() {
-    ctxInput := pkgIntCtx.ContextInput{} 
-    runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
+// Builder specific functions
+
+func (b *workspaceBuilder) createCoreContext() {
+	ctxInput := pkgIntCtx.ContextInput{}
+	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
 	b.ctx = &pkgIntCtx.CoreContext{
 		RuntimeCtx: runtimeCtx,
 	}
 }
 
-func (b *workspacelessBuilder) ensureContextConfiguration() {
+func (b *workspaceBuilder) initializeCoreContext() {
 	var next pkgIntComp.Component
 	// Initialize folders
 	first := &pkgIntComp.GlobalFoldersComponent{}
 	next = first
+	next = next.SetNext(&pkgIntComp.LocalFoldersComponent{})
 	// Initialize cache
 	next = next.SetNext(&pkgIntComp.GlobalCacheComponent{})
+	next = next.SetNext(&pkgIntComp.LocalCacheComponent{})
 	// Initialize plugins
 	next = next.SetNext(&pkgIntComp.GlobalPluginsComponent{})
+	next = next.SetNext(&pkgIntComp.LocalPluginsComponent{})
 	// Initialize bits
-	next.SetNext(&pkgIntComp.GlobalBitsComponent{})
+	next = next.SetNext(&pkgIntComp.GlobalBitsComponent{})
+	next.SetNext(&pkgIntComp.LocalBitsComponent{})
 	runtimeCtx := b.ctx.GetRuntimeCtx()
 	first.Execute(runtimeCtx)
 }
 
-func (b *workspacelessBuilder) getRuntimeContext() pkgCtx.CoreContexter {
-    return b.ctx
+func (b *workspaceBuilder) getCoreContext() pkgCtx.CoreContexter {
+	return b.ctx
 }

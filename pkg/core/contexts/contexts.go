@@ -19,6 +19,14 @@ import (
 	pkgWks "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
+type ContextInput struct {
+	WorkingDirectory string
+	Profile          string
+	Environment      string
+	WorkspaceDepth   int
+	Verbose          bool
+}
+
 type CoreContexter interface {
 	GetRuntimeCtx() RuntimeContexter
 }

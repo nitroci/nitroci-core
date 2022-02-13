@@ -26,7 +26,6 @@ import (
 	pkgRegistries "github.com/nitroci/nitroci-core/pkg/core/registries"
 	pkgFilepath "github.com/nitroci/nitroci-core/pkg/extensions/filepath"
 	pkgOs "github.com/nitroci/nitroci-core/pkg/extensions/os"
-	pkgIntConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
 )
 
 const (
@@ -88,12 +87,6 @@ func (c *CliContext) load() error {
 		return fmt.Errorf("%v is not a valid registry key", bitsRegistryKey)
 	}
 	c.Settings[pkgCtx.CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
-	// Ensure os configuration
-	pkgIntConfigs.EnsureConfiguration(configEnvVal)
-	err = pkgOs.MkdirInMap(c.Settings, []string{pkgCtx.CFG_NAME_CONFIG_HOME, pkgCtx.CFG_NAME_CACHE_PATH, pkgCtx.CFG_NAME_CACHE_PLUGINS_PATH, pkgCtx.CFG_NAME_CACHE_BITS_PATH})
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
