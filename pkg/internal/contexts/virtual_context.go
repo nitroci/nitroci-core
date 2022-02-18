@@ -21,9 +21,9 @@ import (
 	"strings"
 
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 	pkgFilesearch "github.com/nitroci/nitroci-core/pkg/extensions/filesearch"
 	pkgYaml "github.com/nitroci/nitroci-core/pkg/extensions/yaml"
-	pkgWorkspaces "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
 type VirtualContext struct {
@@ -33,9 +33,9 @@ type VirtualContext struct {
 // Creational functions
 
 func (c *VirtualContext) load(settings map[string]string) error {
-	wksFolder := settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]
-	wksFileName := settings[pkgCCtx.CFG_NAME_WKS_FILE_NAME]
-	prjFiles := pkgFilesearch.InverseRecursiveFindFiles(settings[pkgCCtx.CFG_NAME_WORKING_DIRECTORY], wksFolder, wksFileName)
+	wksFolder := settings[CFG_NAME_WKS_FILE_FOLDER]
+	wksFileName := settings[CFG_NAME_WKS_FILE_NAME]
+	prjFiles := pkgFilesearch.InverseRecursiveFindFiles(settings[CFG_NAME_WORKING_DIRECTORY], wksFolder, wksFileName)
 	prjFilesCount := len(prjFiles)
 	c.Workspaces = make([]*WorkspaceContext, prjFilesCount)
 	if prjFilesCount == 0 {
@@ -48,7 +48,7 @@ func (c *VirtualContext) load(settings map[string]string) error {
 		wksContext.WorkspacePath = prjFile
 		wksContext.WorkspaceHome = filepath.Dir(prjFile)
 		wksContext.WorkspaceFileFolder = wksContext.WorkspaceHome
-		if strings.HasSuffix(wksContext.WorkspaceHome, settings[pkgCCtx.CFG_NAME_WKS_FILE_FOLDER]) {
+		if strings.HasSuffix(wksContext.WorkspaceHome, settings[CFG_NAME_WKS_FILE_FOLDER]) {
 			wksContext.WorkspaceHome = filepath.Dir(wksContext.WorkspaceFileFolder)
 		}
 		wksContext.WorkspaceFile = filepath.Base(prjFile)

@@ -17,11 +17,20 @@ package core
 
 import (
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 	pkgIntBuilders "github.com/nitroci/nitroci-core/pkg/internal/builders"
 )
 
-func CreateAndInitalizeContext(workspaceType string, ctxInput pkgCCtx.CoreContextBuilderInput) (pkgCCtx.CoreContexter, error) {
+func createAndInitalizeContext(workspaceType string, ctxInput pkgCCtx.CoreContextBuilderInput) (pkgCCtx.CoreContexter, error) {
 	coreBuilder := pkgIntBuilders.GetCoreBuilder(workspaceType)
 	director := pkgIntBuilders.NewDirector(coreBuilder)
 	return director.BuildContext(ctxInput), nil
+}
+
+func CreateAndInitalizeWorspaceContext(ctxInput pkgCCtx.CoreContextBuilderInput) (pkgCCtx.CoreContexter, error) {
+	return createAndInitalizeContext(pkgIntCtx.CORE_BUILDER_WORKSPACE_TYPE, ctxInput)
+}
+
+func CreateAndInitalizeWorspacelessContext(ctxInput pkgCCtx.CoreContextBuilderInput) (pkgCCtx.CoreContexter, error) {
+	return createAndInitalizeContext(pkgIntCtx.CORE_BUILDER_WORKSPACELESS_TYPE, ctxInput)
 }

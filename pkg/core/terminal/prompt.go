@@ -35,7 +35,7 @@ func PromptGlobalConfigKeyAndSave(profile string, label string, secret bool, key
 		return "", err
 	}
 	if save {
-		pkgConfigs.SetGlobalConfigString(profile, key, value)
+		pkgConfigs.SetGlobalValue(profile, key, value)
 	}
 	return value, nil
 }

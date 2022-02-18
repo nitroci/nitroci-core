@@ -16,13 +16,26 @@ limitations under the License.
 package configs
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/viper"
 )
 
-func EnsureConfiguration(configFile string) (string, error) {
+type Configuration struct {
+}
+
+func (c *Configuration) GetGlobalValue(profile string, key string, value string) interface{} {
+	return viper.Get(fmt.Sprintf("%v.%v", profile, key))
+}
+
+func (c *Configuration) SetGlobalValue(profile string, key string, value interface{}) {
+	viper.Set(fmt.Sprintf("%v.%v", profile, key), value)
+	viper.WriteConfig()
+}
+
+func (c *Configuration) EnsureConfiguration(configFile string) (string, error) {
 	configHome := filepath.Dir(configFile)
 	configName := filepath.Base(configFile)
 	configType := filepath.Ext(configFile)
@@ -35,7 +48,7 @@ func EnsureConfiguration(configFile string) (string, error) {
 		os.MkdirAll(configHome, 0700)
 	}
 	_, err := os.Stat(configPath)
-	if err!= nil && !os.IsExist(err) { 
+	if err != nil && !os.IsExist(err) {
 		if err := viper.SafeWriteConfig(); err != nil {
 			return "", err
 		}

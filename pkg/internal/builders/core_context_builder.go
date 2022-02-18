@@ -17,6 +17,7 @@ package builders
 
 import (
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
 )
 
 type CoreContextBuilder interface {
@@ -26,10 +27,10 @@ type CoreContextBuilder interface {
 }
 
 func GetCoreBuilder(builderType string) CoreContextBuilder {
-	if builderType == pkgCCtx.CORE_BUILDER_WORKSPACE_TYPE {
+	if builderType == pkgIntCtx.CORE_BUILDER_WORKSPACE_TYPE {
 		return newWorkspaceBuilder()
 	}
-	if builderType == pkgCCtx.CORE_BUILDER_WORKSPACELESS_TYPE {
+	if builderType == pkgIntCtx.CORE_BUILDER_WORKSPACELESS_TYPE {
 		return newWorkspacelessBuilder()
 	}
 	return nil
