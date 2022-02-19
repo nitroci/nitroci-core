@@ -20,6 +20,7 @@ type PluginModel struct {
 	Name       string     `yaml:"name"`
 	Operations Operations `yaml:"operations"`
 }
+
 type Flags struct {
 	Name      string      `yaml:"name"`
 	Shorthand interface{} `yaml:"shorthand"`
@@ -27,18 +28,22 @@ type Flags struct {
 	Value interface{} `yaml:"value"`
 	Usage     string      `yaml:"usage"`
 }
+
 type Configure struct {
 	Enabled bool    `yaml:"enabled"`
 	Flags   []Flags `yaml:"flags"`
 }
+
 type Environments struct {
 	Enabled bool    `yaml:"enabled"`
 	Flags   []Flags `yaml:"flags"`
 }
+
 type Pipelines struct {
 	Enabled bool    `yaml:"enabled"`
 	Flags   []Flags `yaml:"flags"`
 }
+
 type Operations struct {
 	Configure    Configure    `yaml:"configure"`
 	Environments Environments `yaml:"environments"`

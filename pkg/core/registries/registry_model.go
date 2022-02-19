@@ -19,12 +19,15 @@ type RegistryModel struct {
 	Settings Settings     `yaml:"settings,omitempty"`
 	Packages []PackageDef `yaml:"packages"`
 }
+
 type Os struct {
 	Replacements map[string]string `yaml:"replacements,omitempty"`
 }
+
 type Settings struct {
 	Os Os `yaml:"os,omitempty"`
 }
+
 type PackageDef struct {
 	Name     string `yaml:"name"`
 	Checksum string `yaml:"checksum,omitempty"`
