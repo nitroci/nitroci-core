@@ -16,15 +16,28 @@ limitations under the License.
 package contexts
 
 import (
+	pkgCConfigs "github.com/nitroci/nitroci-core/pkg/core/configs"
+	pkgTerminal "github.com/nitroci/nitroci-core/pkg/core/terminal"
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
+	pkgIntConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
 )
 
 type CoreContext struct {
-	RuntimeCtx *RuntimeContext
+	RuntimeCtx    *RuntimeContext
+	Configuration *pkgIntConfigs.Configuration
+	Terminal      pkgTerminal.Terminal
 }
 
 // Contexter specific functions
 
 func (c CoreContext) GetRuntimeCtx() pkgCCtx.RuntimeContexter {
 	return c.RuntimeCtx
+}
+
+func (c CoreContext) GetConfigurer() pkgCConfigs.Configurer {
+	return c.Configuration
+}
+
+func (c CoreContext) GetTerminal() pkgTerminal.Terminal {
+	return c.Terminal
 }

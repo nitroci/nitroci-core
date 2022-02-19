@@ -18,7 +18,9 @@ package builders
 import (
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	pkgIntComp "github.com/nitroci/nitroci-core/pkg/internal/components"
+	pkgIntConfigs "github.com/nitroci/nitroci-core/pkg/internal/configs"
 	pkgIntCtx "github.com/nitroci/nitroci-core/pkg/internal/contexts"
+	pkgIntTerminal "github.com/nitroci/nitroci-core/pkg/internal/terminal"
 )
 
 type workspacelessBuilder struct {
@@ -35,8 +37,12 @@ func newWorkspacelessBuilder() *workspacelessBuilder {
 
 func (b *workspacelessBuilder) createCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) {
 	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
+	configuration, _ := pkgIntConfigs.CreateConfiguration(ctxInput, false)
+	terminal, _ := pkgIntTerminal.CreateTerminal(configuration)
 	b.ctx = &pkgIntCtx.CoreContext{
 		RuntimeCtx: runtimeCtx,
+		Configuration: configuration,
+		Terminal: terminal,
 	}
 }
 

@@ -16,6 +16,8 @@ limitations under the License.
 package contexts
 
 import (
+	pkgConfigs "github.com/nitroci/nitroci-core/pkg/core/configs"
+	pkgTerminal "github.com/nitroci/nitroci-core/pkg/core/terminal"
 	pkgWks "github.com/nitroci/nitroci-core/pkg/core/workspaces"
 )
 
@@ -29,6 +31,8 @@ type CoreContextBuilderInput struct {
 
 type CoreContexter interface {
 	GetRuntimeCtx() RuntimeContexter
+	GetConfigurer() pkgConfigs.Configurer
+	GetTerminal() pkgTerminal.Terminal
 }
 
 type RuntimeContexter interface {

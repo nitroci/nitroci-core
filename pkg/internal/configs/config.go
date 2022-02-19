@@ -20,18 +20,27 @@ import (
 	"os"
 	"path/filepath"
 
+	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 	"github.com/spf13/viper"
 )
 
 type Configuration struct {
+	profile string
 }
 
-func (c *Configuration) GetGlobalValue(profile string, key string, value string) interface{} {
-	return viper.Get(fmt.Sprintf("%v.%v", profile, key))
+func CreateConfiguration(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput, enableWorkspace bool) (*Configuration, error) {
+	config := &Configuration{
+		profile: coreContextBuilderInput.Profile,
+	}
+	return config, nil
 }
 
-func (c *Configuration) SetGlobalValue(profile string, key string, value interface{}) {
-	viper.Set(fmt.Sprintf("%v.%v", profile, key), value)
+func (c *Configuration) GetGlobalValue(key string, value string) interface{} {
+	return viper.Get(fmt.Sprintf("%v.%v", c.profile, key))
+}
+
+func (c *Configuration) SetGlobalValue(key string, value interface{}) {
+	viper.Set(fmt.Sprintf("%v.%v", c.profile, key), value)
 	viper.WriteConfig()
 }
 
