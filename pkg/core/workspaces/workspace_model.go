@@ -21,48 +21,59 @@ type WorkspaceModel struct {
 	Environments []Environments `yaml:"environments,omitempty"`
 	Commands     []Commands     `yaml:"commands"`
 }
+
 type Bitbucket struct {
 	Workspace string `yaml:"workspace"`
 	Slug      string `yaml:"slug"`
 }
+
 type Pipelines struct {
 	Platform  string    `yaml:"platform,omitempty"`
 	Bitbucket Bitbucket `yaml:"bitbucket,omitempty"`
 	Suffix    string    `yaml:"suffix,omitempty"`
 }
+
 type Packages struct {
 	Platform string `yaml:"platform,omitempty"`
 }
+
 type SettingsEncryption struct {
 	SecretKey string `yaml:"secret_key,omitempty"`
 }
+
 type Settings struct {
 	Pipelines  Pipelines          `yaml:"pipelines,omitempty"`
 	Packages   Packages           `yaml:"packages,omitempty"`
 	Encryption SettingsEncryption `yaml:"encryption,omitempty"`
 }
+
 type Plugin struct {
 	Name     string `yaml:"name"`
 	Version  string `yaml:"version"`
 	Registry string `yaml:"registry,omitempty"`
 }
+
 type Workspace struct {
 	ID      string   `yaml:"id"`
 	Name    string   `yaml:"name,omitempty"`
 	Plugins []Plugin `yaml:"plugins,omitempty"`
 }
+
 type Encryption struct {
 	Paths []string `yaml:"paths,omitempty"`
 }
+
 type Environments struct {
 	Name       string     `yaml:"name,omitempty"`
 	Encryption Encryption `yaml:"encryption,omitempty"`
 }
+
 type Steps struct {
 	Cwd     string   `yaml:"cwd,omitempty"`
 	Scripts []string `yaml:"scripts,omitempty"`
 	Script  string   `yaml:"script,omitempty"`
 }
+
 type Commands struct {
 	Name        string  `yaml:"name,omitempty"`
 	Description string  `yaml:"description,omitempty"`
