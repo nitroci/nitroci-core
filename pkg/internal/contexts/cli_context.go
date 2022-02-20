@@ -39,7 +39,7 @@ type CliContext struct {
 	Profile          string
 	Environment      string
 	WorkspaceDepth   int
-	Settings         map[string]string
+	Settings         *map[string]string
 	Verbose          bool
 	Goos             string
 	Goarch           string
@@ -47,47 +47,49 @@ type CliContext struct {
 
 // Creational functions
 
-func (c *CliContext) load(settings map[string]string) error {
-	c.Settings[CFG_NAME_CONFIG_PATH] = CFG_NAME_WORKING_DIRECTORY
+func (c *CliContext) load(settings *map[string]string) error {
+	c.Settings = settings
+	(*c.Settings)[CFG_NAME_WORKING_DIRECTORY] = c.WorkingDirectory
 	// Load globacl config configurations
 	configEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CONFIG, func(s string) string {
 		home, _ := os.UserHomeDir()
 		return fmt.Sprintf("%v/.nitroci/config.ini", home)
 	})
+	(*c.Settings)[CFG_NAME_CONFIG_PATH] = configEnvVal
 	configPDesc, err := pkgFilepath.GetFilePathDescription(configEnvVal, strings.Split(EXTENSION_TYPES, ","), false)
 	if err != nil {
 		return err
 	}
-	c.Settings[CFG_NAME_CONFIG_PATH] = configPDesc.Path
-	c.Settings[CFG_NAME_CONFIG_HOME] = configPDesc.Home
-	c.Settings[CFG_NAME_CONFIG_FILE] = configPDesc.FileName
-	c.Settings[CFG_NAME_CONFIG_TYPE] = configPDesc.FileExtension
+	(*c.Settings)[CFG_NAME_CONFIG_PATH] = configPDesc.Path
+	(*c.Settings)[CFG_NAME_CONFIG_HOME] = configPDesc.Home
+	(*c.Settings)[CFG_NAME_CONFIG_FILE] = configPDesc.FileName
+	(*c.Settings)[CFG_NAME_CONFIG_TYPE] = configPDesc.FileExtension
 	// Load cache configurations
 	chacheEnvVal := pkgOs.GetEnvOrFunc(ENV_NAME_CACHE_HOME, func(s string) string {
-		return fmt.Sprintf("%v/cache", c.Settings[CFG_NAME_CONFIG_HOME])
+		return fmt.Sprintf("%v/cache", (*c.Settings)[CFG_NAME_CONFIG_HOME])
 	})
 	cachePDesc, err := pkgFilepath.GetDirPathDescription(chacheEnvVal, false)
 	if err != nil {
 		return err
 	}
-	c.Settings[CFG_NAME_CACHE_PATH] = cachePDesc.Home
-	c.Settings[CFG_NAME_CACHE_PLUGINS_PATH] = fmt.Sprintf("%v/plugins", cachePDesc.Home)
-	c.Settings[CFG_NAME_CACHE_BITS_PATH] = fmt.Sprintf("%v/bits", cachePDesc.Home)
+	(*c.Settings)[CFG_NAME_CACHE_PATH] = cachePDesc.Home
+	(*c.Settings)[CFG_NAME_CACHE_PLUGINS_PATH] = fmt.Sprintf("%v/plugins", cachePDesc.Home)
+	(*c.Settings)[CFG_NAME_CACHE_BITS_PATH] = fmt.Sprintf("%v/bits", cachePDesc.Home)
 	// Load plugins configurations
 	pluginRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_PLUGINS_REGISTRY, CFG_DEFVAL_PLUGINS_REGISTRY_GITHUB_URL)
 	if !pkgRegistries.IsValidRegistryKey(pluginRegistryKey) {
 		return fmt.Errorf("%v is not a valid registry key", pluginRegistryKey)
 	}
-	c.Settings[CFG_NAME_PLUGINS_REGISTRY] = pluginRegistryKey
+	(*c.Settings)[CFG_NAME_PLUGINS_REGISTRY] = pluginRegistryKey
 	// Load workspace configurations
-	c.Settings[CFG_NAME_WKS_FILE_FOLDER] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
-	c.Settings[CFG_NAME_WKS_FILE_NAME] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
+	(*c.Settings)[CFG_NAME_WKS_FILE_FOLDER] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_FOLDER)
+	(*c.Settings)[CFG_NAME_WKS_FILE_NAME] = pkgOs.GetEnvOrDefault(ENV_NAME_WKS_FILE_FOLDER, CFG_DEFVAL_WKS_FILE_NAME)
 	// Load bits configurations
 	bitsRegistryKey := pkgOs.GetEnvOrDefault(ENV_NAME_BITS_REGISTRY, CFG_DEFVAL_BITS_REGISTRY_GITHUB_URL)
 	if !pkgRegistries.IsValidRegistryKey(bitsRegistryKey) {
 		return fmt.Errorf("%v is not a valid registry key", bitsRegistryKey)
 	}
-	c.Settings[CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
+	(*c.Settings)[CFG_NAME_BITS_REGISTRY] = bitsRegistryKey
 	return nil
 }
 
@@ -104,7 +106,7 @@ func newCliContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) *Cli
 		Profile:          coreContextBuilderInput.Profile,
 		Environment:      coreContextBuilderInput.Environment,
 		WorkspaceDepth:   coreContextBuilderInput.WorkspaceDepth,
-		Settings:         map[string]string{},
+		Settings:         nil,
 		Verbose:          coreContextBuilderInput.Verbose,
 		Goos:             runtime.GOOS,
 		Goarch:           runtime.GOARCH,

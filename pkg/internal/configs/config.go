@@ -28,7 +28,7 @@ type Configuration struct {
 	profile string
 }
 
-func CreateConfiguration(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput, enableWorkspace bool) (*Configuration, error) {
+func CreateConfiguration(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput) (*Configuration, error) {
 	config := &Configuration{
 		profile: coreContextBuilderInput.Profile,
 	}

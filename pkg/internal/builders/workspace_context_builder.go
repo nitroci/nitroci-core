@@ -36,8 +36,8 @@ func newWorkspaceBuilder() *workspaceBuilder {
 // Builder specific functions
 
 func (b *workspaceBuilder) createCoreContext(ctxInput pkgCCtx.CoreContextBuilderInput) {
-	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, false)
-	configuration, _ := pkgIntConfigs.CreateConfiguration(ctxInput, false)
+	runtimeCtx, _ := pkgIntCtx.CreateContext(ctxInput, true)
+	configuration, _ := pkgIntConfigs.CreateConfiguration(ctxInput)
 	terminal, _ := pkgIntTerminal.CreateTerminal(configuration)
 	b.ctx = &pkgIntCtx.CoreContext{
 		RuntimeCtx: runtimeCtx,

@@ -16,8 +16,6 @@ limitations under the License.
 package components
 
 import (
-	"fmt"
-
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
@@ -26,7 +24,6 @@ type GlobalBitsComponent struct {
 }
 
 func (c *GlobalBitsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
-	fmt.Println("GLOBAL BITS")
 	if c.next == nil {
 		return nil
 	}
@@ -38,7 +35,6 @@ type LocalBitsComponent struct {
 }
 
 func (c *LocalBitsComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
-	fmt.Println("LOCAL BITS")
 	if c.next == nil {
 		return nil
 	}

@@ -20,7 +20,7 @@ import (
 )
 
 type Contexter interface {
-	load(settings map[string]string) error
+	load(settings *map[string]string) error
 	validate() error
 }
 
@@ -28,7 +28,7 @@ type context struct {
 	Contexter
 }
 
-func (c *context) createCoreContext(settings map[string]string) error {
+func (c *context) createCoreContext(settings *map[string]string) error {
 	if err := c.load(settings); err != nil {
 		return err
 	}
@@ -48,6 +48,7 @@ func CreateContext(coreContextBuilderInput pkgCCtx.CoreContextBuilderInput, enab
 	ctx := context{
 		Contexter: runtimeCtx,
 	}
-	ctx.createCoreContext(map[string]string{})
+	settings := map[string]string{}
+	ctx.createCoreContext(&settings)
 	return runtimeCtx, nil
 }

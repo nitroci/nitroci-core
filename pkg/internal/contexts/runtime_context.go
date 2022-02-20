@@ -27,16 +27,16 @@ type RuntimeContext struct {
 
 // Creational functions
 
-func (c *RuntimeContext) load(settings map[string]string) error {
+func (c *RuntimeContext) load(settings *map[string]string) error {
 	if err := c.Cli.load(settings); err != nil {
 		return err
 	}
-	if !c.workspaceLess {
-		if err := c.Virtual.load(settings); err != nil {
+	if err := c.Virtual.load(settings); err != nil {
+		if !c.workspaceLess {
 			return err
 		}
 	}
-	return nil
+	return nil 
 }
 
 func (c *RuntimeContext) validate() error {
@@ -88,7 +88,7 @@ func (r *RuntimeContext) GetEnvironment() string {
 }
 
 func (r *RuntimeContext) GetSettings(key string) (string, bool) {
-	if val, ok := r.Cli.Settings[key]; ok {
+	if val, ok := (*r.Cli.Settings)[key]; ok {
 		return val, true
 	}
 	return "", false

@@ -16,8 +16,6 @@ limitations under the License.
 package components
 
 import (
-	"fmt"
-
 	pkgCCtx "github.com/nitroci/nitroci-core/pkg/core/contexts"
 )
 
@@ -26,7 +24,6 @@ type GlobalCacheComponent struct {
 }
 
 func (c *GlobalCacheComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
-	fmt.Println("GLOBAL CACHE")
 	if c.next == nil {
 		return nil
 	}
@@ -38,7 +35,6 @@ type LocalCacheComponent struct {
 }
 
 func (c *LocalCacheComponent) Execute(ctx pkgCCtx.RuntimeContexter) error {
-	fmt.Println("LOCAL CACHE")
 	if c.next == nil {
 		return nil
 	}
